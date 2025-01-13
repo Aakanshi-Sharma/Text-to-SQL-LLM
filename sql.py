@@ -4,9 +4,16 @@ import pandas as pd
 from io import StringIO
 
 db_name = "local.db"
+uploaded_folder = "uploaded_file"
+
+os.makedirs(uploaded_folder, exist_ok=True)
 
 
 def create_database(csv_content):
+    csv_file_path = os.path.join(uploaded_folder, "uploaded_file.csv")
+    with open(csv_file_path, "w", encoding="utf-8") as file:
+        file.write(csv_content)
+    print(f"CSV content saved to {csv_file_path}")
     csv_file = StringIO(csv_content)
     df = pd.read_csv(csv_file)
     table_name = os.path.basename(csv_content.name)
