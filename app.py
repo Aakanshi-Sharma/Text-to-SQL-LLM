@@ -12,8 +12,10 @@ genai.configure(api_key=os.getenv("GOOGLE-API-KEY"))
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 
-def generate_response():
-    pass
+def generate_response(input, df):
+    prompt="""You are SQl query expert, """
+    response=model.generate_content([input,df])
+    return response.text
 
 
 st.header("Text To SQL LLM App")
