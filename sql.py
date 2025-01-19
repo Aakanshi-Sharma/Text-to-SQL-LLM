@@ -1,10 +1,12 @@
 import sqlite3
 import os
 import pandas as pd
+import shutil
 
 uploaded_folder = "uploaded_file"
 
 os.makedirs(uploaded_folder, exist_ok=True)
+db_name = "local.db"
 
 
 def create_database(csv_content):
@@ -15,14 +17,11 @@ def create_database(csv_content):
 
     df = pd.read_csv(csv_file_path)
 
-    db_name = "local.db"
     table_name = os.path.splitext(os.path.basename(csv_content.name))[0]
-    table_name = table_name.replace(" ", "_")  # Replace spaces with underscores
+    # table_name = table_name.replace(" ", "_")  # Replace spaces with underscores
 
     # Delete existing database if it exists
-    if os.path.exists(db_name):
-        os.remove(db_name)
-        print(f"{db_name} deleted.")
+    delete_local_db(db_name)
 
     # Create a new SQLite database
     conn = sqlite3.connect(db_name)
@@ -42,6 +41,24 @@ def create_database(csv_content):
     conn.close()
     data = pd.read_csv(csv_file_path)
     return data
+
+
+def delete_local_db(directory_path):
+    if os.path.exists(directory_path):
+        # Iterate over each item in the directory
+        for filename in os.listdir(directory_path):
+            file_path = os.path.join(directory_path, filename)
+            try:
+                # Check if it's a file or directory and remove accordingly
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)  # Delete file or symbolic link
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)  # Delete directory
+            except Exception as e:
+                print(f"Failed to delete {file_path}. Reason: {e}")
+        print(f"All files in {directory_path} have been deleted.")
+    else:
+        print(f"The directory {directory_path} does not exist.")
 
 
 def determine_sql_type(series):
