@@ -13,7 +13,6 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 
 
 def generate_response(input, df):
-    print("df", df.head())
     prompt = f"""You are an SQL query expert. Given a dataset, generate a valid SQL query based on the user's input query.
         Dataset Schema:
         {df.head().to_string(index=False)}
@@ -31,12 +30,10 @@ uploaded_file = st.file_uploader("Upload the files", type=["csv"])
 if uploaded_file is not None:
     result = create_database(uploaded_file)
     user_query = st.text_input("Enter the query...")
-
     submit_button = st.button("Submit")
-    if user_query == "":
-        st.write("Please the valid query...")
-    else:
-        if submit_button:
+
+    if submit_button:
+        with st.spinner('Wait for it...'):
             result = generate_response(user_query, result)
-            st.write(result)
-    print(result)
+            st.code(result)
+
