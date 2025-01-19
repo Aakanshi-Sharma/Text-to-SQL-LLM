@@ -40,7 +40,8 @@ def create_database(csv_content):
     # Commit and close the connection
     conn.commit()
     conn.close()
-    return f"Database '{db_name}' created with table '{table_name}'."
+    data = pd.read_csv(csv_file_path)
+    return data
 
 
 def determine_sql_type(series):

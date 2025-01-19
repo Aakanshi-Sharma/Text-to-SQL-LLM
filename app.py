@@ -13,13 +13,30 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 
 
 def generate_response(input, df):
-    prompt="""You are SQl query expert, """
-    response=model.generate_content([input,df])
-    return response.text
+    print("df", df.head())
+    prompt = f"""You are an SQL query expert. Given a dataset, generate a valid SQL query based on the user's input query.
+        Dataset Schema:
+        {df.head().to_string(index=False)}
+        User Query: {input}
+        SQL Query:"""
+    try:
+        response = model.generate_content([prompt])
+        return response.text
+    except Exception as e:
+        return f"Error generating response: {str(e)}"
 
 
 st.header("Text To SQL LLM App")
 uploaded_file = st.file_uploader("Upload the files", type=["csv"])
 if uploaded_file is not None:
     result = create_database(uploaded_file)
+    user_query = st.text_input("Enter the query...")
+
+    submit_button = st.button("Submit")
+    if user_query == "":
+        st.write("Please the valid query...")
+    else:
+        if submit_button:
+            result = generate_response(user_query, result)
+            st.write(result)
     print(result)
