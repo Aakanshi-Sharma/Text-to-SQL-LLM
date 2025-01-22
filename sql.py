@@ -10,6 +10,7 @@ db_name = "local.db"
 
 
 def create_database(csv_content):
+    delete_local_db(uploaded_folder)
     csv_file_path = os.path.join(uploaded_folder, csv_content.name)
     with open(csv_file_path, "wb") as file:
         file.write(csv_content.getbuffer())
@@ -21,7 +22,7 @@ def create_database(csv_content):
     # table_name = table_name.replace(" ", "_")  # Replace spaces with underscores
 
     # Delete existing database if it exists
-    delete_local_db(db_name)
+    # delete_local_db(db_name)
 
     # Create a new SQLite database
     conn = sqlite3.connect(db_name)
