@@ -40,23 +40,25 @@ def create_database(csv_content):
     conn.commit()
     conn.close()
     data = pd.read_csv(csv_file_path)
-    return data
+    return data, table_name
 
 
 def delete_local_db(directory_path):
     if os.path.exists(directory_path):
         # Iterate over each item in the directory
-        for filename in os.listdir(directory_path):
-            file_path = os.path.join(directory_path, filename)
-            try:
-                # Check if it's a file or directory and remove accordingly
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)  # Delete file or symbolic link
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)  # Delete directory
-            except Exception as e:
-                print(f"Failed to delete {file_path}. Reason: {e}")
-        print(f"All files in {directory_path} have been deleted.")
+        if(len(os.listdir(directory_path))>0):
+
+            for filename in os.listdir(directory_path):
+                file_path = os.path.join(directory_path, filename)
+                try:
+                    # Check if it's a file or directory and remove accordingly
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)  # Delete file or symbolic link
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)  # Delete directory
+                except Exception as e:
+                    print(f"Failed to delete {file_path}. Reason: {e}")
+            print(f"All files in {directory_path} have been deleted.")
     else:
         print(f"The directory {directory_path} does not exist.")
 
