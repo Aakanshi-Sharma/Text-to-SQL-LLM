@@ -36,7 +36,7 @@ def sql_response(db_name, query, table):
     return data
 
 
-# st.header("Text To SQL LLM App")
+st.header("Text To SQL LLM App")
 uploaded_file = st.file_uploader("Upload the files", type=["csv"])
 if uploaded_file is not None:
     result, table_name = create_database(uploaded_file)
